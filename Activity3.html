@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Grab Fare Estimator</title>
+  <link rel="stylesheet" href="css/cost-estimator.css">
+</head>
+<body>
+
+  <div class="app-container">
+    <div class="back-nav-container">
+      <a href="index.html" class="btn-back-grab">← Home</a>
+    </div>
+
+    <div class="app-header">
+      <h1>Grab Fare Estimator</h1>
+      <p>Calculate your upfront ride pricing instantly</p>
+    </div>
+
+    <div class="app-content">
+      <div class="route-container">
+        <div class="route-line"></div>
+        
+        <div class="route-field">
+          <div class="route-icon">🟢</div>
+          <input type="text" id="pickup" placeholder="Enter pickup location">
+        </div>
+        
+        <div class="route-field">
+          <div class="route-icon">🔴</div>
+          <input type="text" id="dropoff" placeholder="Enter drop-off destination">
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="distance">Commute Distance</label>
+        <div class="distance-input-wrapper">
+          <input type="number" id="distance" min="0.1" step="0.1" placeholder="0.0">
+          <span class="unit-label">km</span>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="voucher">Membership & Vouchers</label>
+        <select id="voucher">
+          <option value="none">Standard Passenger (No Base Discount)</option>
+          <option value="student">Student / PWD / Senior (20% Off)</option>
+          <option value="premium">Premium Member (10% Off)</option>
+        </select>
+      </div>
+
+      <div class="input-group">
+        <label>Select Service Tier</label>
+        <div class="vehicle-options">
+          
+          <label class="vehicle-card">
+            <input type="radio" name="ride-type" value="bike" checked>
+            <img src="pics/motorcycle.png" alt="GrabBike">
+            <div class="vehicle-details">
+              <h3>GrabBike</h3>
+              <p>Beat the heavy traffic lanes safely</p>
+            </div>
+          </label>
+
+          <label class="vehicle-card">
+            <input type="radio" name="ride-type" value="car4">
+            <img src="pics/economy.png" alt="GrabCar 4-Seater">
+            <div class="vehicle-details">
+              <h3>GrabCar (4-Seater)</h3>
+              <p>Comfortable standard economy hatchbacks</p>
+            </div>
+          </label>
+
+          <label class="vehicle-card">
+            <input type="radio" name="ride-type" value="premium">
+            <img src="pics/premium.png" alt="GrabCar Premium">
+            <div class="vehicle-details">
+              <h3>GrabCar Premium</h3>
+              <p>High-end luxury sedans for corporate travel</p>
+            </div>
+          </label>
+
+        </div>
+      </div>
+
+      <button class="btn-estimate" onclick="calculateFare()">Confirm Booking Estimate</button>
+
+      <div id="receiptBox">
+        <h2>Booking Invoice Summary</h2>
+        
+        <div class="trip-summary-badge">
+          <div class="trip-line">📍 <strong>From:</strong> <span id="pop-pickup">---</span></div>
+          <div class="trip-line">🏁 <strong>To:</strong> <span id="pop-dropoff">---</span></div>
+          <div>Service Level: <span class="service-tag" id="pop-service">---</span></div>
+        </div>
+        
+        <div class="receipt-row">
+          <span>Base Booking Fee</span>
+          <span class="price-value">₱<span id="receipt-base">0.00</span></span>
+        </div>
+        
+        <div class="receipt-row">
+          <span>Distance Charge</span>
+          <span class="price-value">₱<span id="receipt-distance">0.00</span></span>
+        </div>
+
+        <div class="receipt-row discount-line" id="discount-row" style="display: none;">
+          <span id="discount-label">Tier Discount</span>
+          <span class="price-value discount-line">-₱<span id="receipt-discount">0.00</span></span>
+        </div>
+
+        <div class="receipt-row discount-line" id="long-distance-row" style="display: none;">
+          <span>Long Distance Promo (5% Off)</span>
+          <span class="price-value discount-line">-₱<span id="receipt-long-discount">0.00</span></span>
+        </div>
+        
+        <div class="receipt-row total-row">
+          <strong>Upfront Total Fare</strong>
+          <span class="price-value highlight" id="receipt-total">₱0.00</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    function calculateFare() {
+      const pickup = document.getElementById("pickup").value.trim();
+      const dropoff = document.getElementById("dropoff").value.trim();
+      const distanceInput = parseFloat(document.getElementById("distance").value);
+      const voucherValue = document.getElementById("voucher").value;
+      
+      if (!pickup || !dropoff || isNaN(distanceInput) || distanceInput <= 0) {
+        alert("Please complete all address locations and enter a valid distance.");
+        return;
+      }
+
+      const pricingTiers = {
+        bike:    { name: "GrabBike", base: 50, perKm: 12 },
+        car4:    { name: "GrabCar (4-Seater)", base: 80, perKm: 15 },
+        premium: { name: "GrabCar Premium", base: 150, perKm: 25 }
+      };
+
+      const selectedTier = document.querySelector('input[name="ride-type"]:checked').value;
+      const config = pricingTiers[selectedTier];
+
+      const baseFee = config.base;
+      const distanceFee = distanceInput * config.perKm;
+      const initialSubtotal = baseFee + distanceFee;
+
+      let tierDiscountRate = 0;
+      if (voucherValue === "student") {
+        tierDiscountRate = 0.20;
+        document.getElementById("discount-label").innerText = "Student/PWD/Senior (20%)";
+      } else if (voucherValue === "premium") {
+        tierDiscountRate = 0.10;
+        document.getElementById("discount-label").innerText = "Premium Member (10%)";
+      }
+
+      const tierDiscountAmount = initialSubtotal * tierDiscountRate;
+      document.getElementById("discount-row").style.display = tierDiscountAmount > 0 ? "flex" : "none";
+
+      let longDistanceDiscountAmount = 0;
+      if (distanceInput > 20) {
+        longDistanceDiscountAmount = initialSubtotal * 0.05;
+        document.getElementById("long-distance-row").style.display = "flex";
+      } else {
+        document.getElementById("long-distance-row").style.display = "none";
+      }
+
+      const finalTotalFare = initialSubtotal - tierDiscountAmount - longDistanceDiscountAmount;
+
+      document.getElementById("pop-pickup").innerText = pickup;
+      document.getElementById("pop-dropoff").innerText = dropoff;
+      document.getElementById("pop-service").innerText = config.name;
+
+      document.getElementById("receipt-base").innerText = baseFee.toFixed(2);
+      document.getElementById("receipt-distance").innerText = distanceFee.toFixed(2);
+      document.getElementById("receipt-discount").innerText = tierDiscountAmount.toFixed(2);
+      document.getElementById("receipt-long-discount").innerText = longDistanceDiscountAmount.toFixed(2);
+      document.getElementById("receipt-total").innerText = "₱" + finalTotalFare.toFixed(2);
+
+      document.getElementById("receiptBox").style.display = "block";
+      document.getElementById("receiptBox").scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  </script>
+</body>
+</html>

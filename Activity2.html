@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MCJabi Order App</title>
+  <link rel="stylesheet" href="css/order-app.css">
+</head>
+<body>
+
+  <div style="max-width: 1000px; margin: 0 auto 10px auto; padding: 0 20px;">
+    <a href="index.html" class="btn-back-jollibee">← Back to Hub</a>
+  </div>
+
+  <h1>MCJabi Order App</h1>
+
+  <div class="menu">
+    <div class="item">
+      <img src="pics/burger.png" alt="Hamburger">
+      <p>Hamburger - ₱100</p>
+      <div class="qty-container">
+        Quantity: <input type="number" id="qty-hamburger" value="0" min="0">
+      </div>
+    </div>
+
+    <div class="item">
+      <img src="pics/spaghetti.png" alt="Spaghetti">
+      <p>Spaghetti - ₱120</p>
+      <div class="qty-container">
+        Quantity: <input type="number" id="qty-spaghetti" value="0" min="0">
+      </div>
+    </div>
+
+    <div class="item">
+      <img src="pics/chicken.png" alt="Chicken">
+      <p>Chicken - ₱150</p>
+      <div class="qty-container">
+        Quantity: <input type="number" id="qty-chicken" value="0" min="0">
+      </div>
+    </div>
+
+    <div class="item">
+      <img src="pics/icecream.png" alt="Ice Cream">
+      <p>Ice Cream - ₱35</p>
+      <div class="qty-container">
+        Quantity: <input type="number" id="qty-icecream" value="0" min="0">
+      </div>
+    </div>
+
+    <div class="item">
+      <img src="pics/coke.png" alt="Coke">
+      <p>Coke - ₱45</p>
+      <div class="qty-container">
+        Quantity: <input type="number" id="qty-coke" value="0" min="0">
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <label><strong>Discount:</strong></label>
+    <select id="discount">
+      <option value="0">None</option>
+      <option value="0.25">Senior Citizen (25%)</option>
+      <option value="0.20">Membership Card (20%)</option>
+      <option value="0.15">Manager (15%)</option>
+    </select>
+    <br>
+    <button onclick="calculateOrder()">Compute Total</button>
+  </div>
+
+  <p id="totalPrice">
+    Discount: ₱0.00<br>
+    <strong>SubTotal: ₱0.00</strong><br>
+    <strong>Total Price: ₱0.00</strong>
+  </p>
+
+  <script>
+    function calculateOrder(){
+      const prices = {
+        hamburger: 100,
+        spaghetti: 120,
+        chicken: 150,
+        icecream: 35,
+        coke: 45
+      };
+
+      const qtyHamburger = parseInt(document.getElementById("qty-hamburger").value) || 0;
+      const qtySpaghetti = parseInt(document.getElementById("qty-spaghetti").value) || 0;
+      const qtyChicken = parseInt(document.getElementById("qty-chicken").value) || 0;
+      const qtyIceCream = parseInt(document.getElementById("qty-icecream").value) || 0;
+      const qtyCoke = parseInt(document.getElementById("qty-coke").value) || 0;
+
+      const subtotal = (qtyHamburger * prices.hamburger) +
+                       (qtySpaghetti * prices.spaghetti) +
+                       (qtyChicken * prices.chicken) +
+                       (qtyIceCream * prices.icecream) +
+                       (qtyCoke * prices.coke);
+
+      const discountRate = parseFloat(document.getElementById("discount").value);
+      const discount = subtotal * discountRate;
+      const total = subtotal - discount;
+
+      document.getElementById("totalPrice").innerHTML = `
+        Discount: ₱${discount.toFixed(2)}<br>
+        <strong>SubTotal: ₱${subtotal.toFixed(2)}</strong><br>
+        <strong>Total Price: ₱${total.toFixed(2)}</strong>
+      `;
+    }
+
+    document.getElementById("qty-hamburger").addEventListener("input", calculateOrder);
+    document.getElementById("qty-spaghetti").addEventListener("input", calculateOrder);
+    document.getElementById("qty-chicken").addEventListener("input", calculateOrder);
+    document.getElementById("qty-icecream").addEventListener("input", calculateOrder);
+    document.getElementById("qty-coke").addEventListener("input", calculateOrder);
+    document.getElementById("discount").addEventListener("change", calculateOrder);
+
+    calculateOrder();
+  </script>
+</body>
+</html>

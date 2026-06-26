@@ -1,0 +1,120 @@
+body {
+  font-family: 'Comic Sans MS', 'Segoe UI', Tahoma, sans-serif;
+  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.container {
+  background-color: #ffffff;
+  padding: 35px 30px;
+  border-radius: 24px; /* Super soft round corners */
+  box-shadow: 0 15px 0px #ffccd5, 0 25px 30px rgba(255, 75, 110, 0.15); /* Double layer cute shadow effect */
+  text-align: center;
+  width: 320px;
+  border: 4px solid #ffccd5;
+}
+
+h2 {
+  color: #ff4b72;
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-weight: 800;
+  font-size: 26px;
+  letter-spacing: -0.5px;
+  text-shadow: 1px 1px 0px #fff, 2px 2px 0px #ffccd5;
+}
+
+input[type="number"] {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px 16px;
+  margin: 10px 0;
+  border: 3px solid #ffe3e8;
+  border-radius: 14px;
+  font-size: 16px;
+  outline: none;
+  background-color: #fff9fa;
+  color: #ff4b72;
+  font-weight: 600;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+input[type="number"]:focus {
+  border-color: #ff859f;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(255, 133, 159, 0.15);
+}
+
+input[type="number"]::placeholder {
+  color: #ffa6b9;
+}
+
+.btn-group {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 20px;
+}
+
+button {
+  background-color: #ff5e84;
+  color: #ffffff;
+  padding: 14px;
+  border: none;
+  border-radius: 16px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 5px 0px #d63359; /* Cute 3D button effect */
+  transition: all 0.1s ease;
+}
+
+button:hover {
+  background-color: #ff4b72;
+}
+
+button:active {
+  transform: translateY(4px); /* Pushes down like a real squishy button */
+  box-shadow: 0 1px 0px #d63359;
+}
+
+h3#result {
+  background-color: #fff0f3;
+  color: #ff3360;
+  margin-top: 30px;
+  padding: 15px;
+  border-radius: 14px;
+  font-size: 18px;
+  font-weight: 700;
+  border: 2px dashed #ffccd5;
+  min-height: 22px;
+}
+
+.btn-back-cute {
+  display: inline-block;
+  text-decoration: none;
+  background-color: #ffe3e8;
+  color: #ff4b72;
+  padding: 6px 14px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 15px;
+  border: 2px solid #ffccd5;
+  box-shadow: 0 3px 0px #ffccd5;
+  transition: all 0.1s ease;
+}
+
+.btn-back-cute:hover {
+  background-color: #ffccd5;
+}
+
+.btn-back-cute:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0px #ffccd5;
+}
